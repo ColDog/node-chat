@@ -1,17 +1,17 @@
-module.exports = function(app, User){
+module.exports = function(app, User, io){
     app.get('/users', function(req, res){
         console.log('get users' );
         User.find({}, function(err, users) {
             if (err) throw err;
             console.log(users);
-            res.sendFile(__dirname + '/users/views/users.html');
+            res.sendFile(__dirname + '/views/users.html');
         });
     });
     app.get('/users/:username', function(req, res){
         User.find({ username: req.params.username }, function(err, user) {
             if (err) throw err;
             console.log(user);
-            res.sendFile(__dirname + '/users/views/user.html');
+            res.sendFile(__dirname + '/views/user.html');
         });
     });
     app.post('/users/new', function(req, res){
@@ -27,7 +27,7 @@ module.exports = function(app, User){
         User.findOneAndUpdate({ username: req.params.username }, req.body, function(err, user) {
             if (err) throw err;
             console.log('user updated', user);
-            res.sendFile(__dirname + '/users/views/user.html');
+            res.sendFile(__dirname + '/views/user.html');
         });
     });
     app.delete('/users/:username', function(req, res){
@@ -35,6 +35,30 @@ module.exports = function(app, User){
             if (err) throw err;
             console.log(user);
             res.redirect( '/users' )
+        });
+    });
+    app.post('/users/login', function(req, res){
+        User.find({ username: req.body.username }, function(err, user) {
+            if (err) throw err;
+            user.comparePassword(req.body.password, function(err, match) {
+                    if (match) {
+                        // do login stuff
+                    } else {
+                        // redirect stuff
+                    }
+                }
+            )
+        });
+    });
+
+    io.on('connection', function(socket){
+        console.log('socket connected');
+        socket.on('checkUsername', function(username){
+            User.find({ username: username }, function(err, user) {
+                if (err) throw err;
+                console.log( 'check username', user );
+                socket.emit( 'checkName', user[0] ? true : false )
+            });
         });
     });
 };

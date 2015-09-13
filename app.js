@@ -34,6 +34,7 @@ UserSchema.pre('save', function(next) {
     });
 });
 
+
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
         if (err) return cb(err);
@@ -59,7 +60,7 @@ app.use( express.static(__dirname + '/public') );
 
 // chat plugin functionality
 require( './chat/chat' )( app, io, redis, opentok );
-require( './users/users' )( app, User );
+require( './users/users' )( app, User, io );
 
 // start server
 http.listen(app.get('port'), function(){

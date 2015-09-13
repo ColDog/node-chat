@@ -13,12 +13,13 @@
 <body>
 <p id="alert"></p>
 <h1>Chat Application</h1>
-<form action="/user/new" method="post">
-    <input id="name"        name="name"     autocomplete="on"  placeholder="name" />
-    <input id="username"    name="username" autocomplete="on"  placeholder="username" />
-    <input id="password"    name="password" autocomplete="on"  placeholder="password" />
-    <input id="button"      type="submit" value="Submit" disabled>
+<form action="/users/new" method="post">
+    <input type="text"      id="name"        name="name"     autocomplete="on"  placeholder="name (required)" />
+    <input type="text"      id="username"    name="username" autocomplete="on"  placeholder="username (unique and no spaces)" />
+    <input type="password"  id="password"    name="password" autocomplete="on"  placeholder="password (longer than 6 characters)" />
+    <input id="button"      type="submit"    value="Submit"  disabled>
 </form>
+
 
 <!-- Javascripts -->
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
@@ -26,5 +27,18 @@
 <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
 <script src="/javascripts/all.js"></script>
 <script src="/javascripts/users/index.js"></script>
+<script>
+    $('form input').keyup(function(){
+        if ( $('#name').val().length > 0 && $('#password').val().length > 5 && $('#username').val().indexOf(' ') == -1 && $('#username').val().length > 0  ) {
+            socket.emit( 'checkUsername', $('#username').val() )
+        } else {
+            $('#button').prop('disabled', true)
+        }
+    });
+    socket.on('checkName', function(msg){
+        $('#button').prop('disabled', msg);
+    });
+
+</script>
 </body>
 </html>
