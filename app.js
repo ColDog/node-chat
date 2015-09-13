@@ -5,31 +5,16 @@ var io              = require('socket.io')(http);
 var OpenTok         = require('opentok');
 var bodyparser      = require('body-parser');
 var opentok         = new OpenTok('45340532', '430580f9331483ee5d50e44b6f69547db32e0941');
-var redis_req       = require('redis');
-var redis           = redis_req.createClient();
-var winston         = require('winston');
-require('winston-redis').Redis;
+var redis           = require('redis').createClient(process.env.REDIS_URL ? process.env.REDIS_URL : null);
+
+redis.on("error", function (err) { console.log("Error " + err) });
+redis.on('connect', function() { console.log('connected') });
+
 
 // middleware
-winston.add(winston.transports.Redis);
-
 app.use( bodyparser.json() );
-
-app.use(bodyparser.urlencoded({
-    extended: true
-}));
-
+app.use(bodyparser.urlencoded({extended: true}));
 app.use( express.static(__dirname + '/public') );
-
-
-// redis connections
-redis.on("error", function (err) {
-    console.log("Error " + err);
-});
-
-redis.on('connect', function() {
-    console.log('connected');
-});
 
 
 // routes
