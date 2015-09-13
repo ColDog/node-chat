@@ -7,7 +7,52 @@ var bodyparser      = require('body-parser');
 var opentok         = new OpenTok('45340532', '430580f9331483ee5d50e44b6f69547db32e0941');
 var redis           = require('redis').createClient(process.env.REDIS_URL ? process.env.REDIS_URL : null);
 var mongoose        = require('mongoose');
-var User            = require('./users/user_model');
+var bcrypt          = require('bcrypt');
+
+// Mongoose
+mongoose.connect('mongodb://localhost/chat');
+var Schema = mongoose.Schema;
+
+var UserSchema = new Schema({
+    name: String,
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    created_at: Date,
+    updated_at: Date
+});
+
+UserSchema.pre('save', function(next) {
+    var user = this;
+
+    // only hash the password if it has been modified (or is new)
+    if (!user.isModified('password')) return next();
+
+    // generate a salt
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err) return next(err);
+
+        // hash the password using our new salt
+        bcrypt.hash(user.password, salt, function(err, hash) {
+            if (err) return next(err);
+
+            // override the cleartext password with the hashed one
+            user.password = hash;
+            next();
+        });
+    });
+
+
+});
+
+UserSchema.methods.comparePassword = function(candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if (err) return cb(err);
+        cb(null, isMatch);
+    });
+};
+
+var User = mongoose.model('User', UserSchema);
+
 
 // redis
 redis.on( "error",   function (err) { console.log("Error " + err) });
@@ -24,6 +69,7 @@ app.use( express.static(__dirname + '/public') );
 
 // chat plugin functionality
 require( './chat/chat' )( app, io, redis, opentok );
+require( './users/users' )( app, User );
 
 // start server
 http.listen(app.get('port'), function(){

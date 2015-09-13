@@ -1,16 +1,17 @@
 module.exports = function(app, User){
     app.get('/users', function(req, res){
+        console.log('get users' );
         User.find({}, function(err, users) {
             if (err) throw err;
             console.log(users);
-            res.render('users', {users: users})
+            res.render(__dirname + '/views/users', {users: users})
         });
     });
     app.get('/users/:username', function(req, res){
         User.find({ username: req.params.username }, function(err, user) {
             if (err) throw err;
             console.log(user);
-            res.render('user', {user: user})
+            res.render(__dirname + '/views/user', {user: user})
         });
     });
     app.post('/users/new', function(req, res){
@@ -26,7 +27,7 @@ module.exports = function(app, User){
         User.findOneAndUpdate({ username: req.params.username }, req.body, function(err, user) {
             if (err) throw err;
             console.log('user updated', user);
-            res.render('user', {user: user})
+            res.render(__dirname + '/views/users', {user: user})
         });
     });
     app.delete('/users/:username', function(req, res){
