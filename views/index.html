@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        body { font: 13px Helvetica, Arial; }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+    </script>
+</head>
+<body>
+    <h1>Chat Application</h1>
+    <form action="/new_room" method="post">
+        <input id="name"    autocomplete="on"  placeholder="name" />
+        <button>Create Room</button>
+    </form>
+</body>
+</html>
