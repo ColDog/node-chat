@@ -14,8 +14,9 @@
 <p id="alert"></p>
 <h1>Chat Application</h1>
 <form action="/new_room" method="post">
-    <input id="name"    name="name" autocomplete="on"  placeholder="name" />
-    <input id="button"  type="submit" value="Submit" disabled>
+    <input id="name"     name="name"    autocomplete="on"   placeholder="name" />
+    <input id="username" type="hidden"  name="username"     autocomplete="on"  placeholder="name" />
+    <input id="button"   type="submit"  value="Submit"      disabled>
 </form>
 
 <!-- Javascripts -->
@@ -23,5 +24,9 @@
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
 <script src="/javascripts/all.js"></script>
+<script src="/javascripts/checkname.js"></script>
+<script>
+    $("#username").val(param('users'))
+</script>
 </body>
 </html>

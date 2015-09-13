@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body { font: 13px Helvetica, Arial; }
+        form { padding: 3px; position: fixed; bottom: 0; width: 50%; }
+        form input { border: 0; padding: 10px; width: 100%; }
+        form textarea { border: 0; padding: 10px; width: 100%;}
+        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+        #publisher { position: absolute; right: 0; bottom: 0; }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+    </script>
+</head>
+<body>
+    <p id="alert"></p>
+    <h1 id="title"></h1>
+    <div id="video"></div>
+
+    <ul id="messages">
+
+    </ul>
+
+    <form action="">
+        <input      id="name"    autocomplete="on"  placeholder="name" />
+        <textarea   id="message" autocomplete="off" placeholder="message" ></textarea>
+        <input      type="submit" value="Message">
+    </form>
+    <div id="publisher"></div>
+
+    <!-- Javascripts -->
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <script src="/javascripts/chat/connect_opentok.js"></script>
+    <script src="/javascripts/all.js"></script>
+    <script src="/javascripts/users/room.js"></script>
+</body>
+</html>

@@ -14,6 +14,13 @@ module.exports = function(app, User, io){
             res.sendFile(__dirname + '/views/user.html');
         });
     });
+    app.get('/users/:username/room/:room', function(req, res){
+        User.find({ username: req.params.username }, function(err, user) {
+            if (err) throw err;
+            console.log(user);
+            res.sendFile(__dirname + '/views/room.html');
+        });
+    });
     app.post('/users/new', function(req, res){
         console.log( req.body );
         var new_user = new User( req.body );

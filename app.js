@@ -9,6 +9,13 @@ var redis           = require('redis').createClient(process.env.REDIS_URL ? proc
 var mongoose        = require('mongoose');
 var bcrypt          = require('bcrypt');
 
+
+// configuration
+app.set( 'port', (process.env.PORT || 3000) );
+app.set( 'view engine', 'jade' );
+
+
+
 // Mongoose
 mongoose.connect('mongodb://localhost/chat');
 var Schema = mongoose.Schema;
@@ -49,18 +56,17 @@ var User = mongoose.model('User', UserSchema);
 redis.on( "error",   function (err) { console.log("Error " + err) });
 redis.on( 'connect', function() { console.log('connected') });
 
-// configuration
-app.set( 'port', (process.env.PORT || 3000) );
-app.set( 'view engine', 'jade' );
 
 // middleware
 app.use( bodyparser.json() );
 app.use( bodyparser.urlencoded({extended: true}) );
 app.use( express.static(__dirname + '/public') );
 
+
 // chat plugin functionality
-require( './chat/chat' )( app, io, redis, opentok );
+require( './chat/chat' )( app, io, redis, opentok, User );
 require( './users/users' )( app, User, io );
+
 
 // start server
 http.listen(app.get('port'), function(){

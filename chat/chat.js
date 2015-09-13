@@ -1,4 +1,4 @@
-module.exports = function(app, io, redis, opentok){
+module.exports = function(app, io, redis, opentok, User){
 
     // routes
     app.get('/', function(req, res){
@@ -13,8 +13,23 @@ module.exports = function(app, io, redis, opentok){
         var name = req.body.name;
         opentok.createSession(function(err, session) {
             console.log('setting key:', name, session.sessionId);
-            redis.set('key:' + name, session.sessionId);
-            res.redirect('/room/' + name)
+            var username = req.body.username;
+            if (username) {
+                User.findOne({ username: username }, function(err, user) {
+                    console.log( 'find user', user );
+                    if (err) throw err;
+                    if (user) {
+                        redis.set('key:' + username + ':' + name, session.sessionId);
+                        res.redirect('users/' + username + '/room/' + name)
+                    } else {
+                        redis.set('key:' + name, session.sessionId);
+                        res.redirect('/room/' + name)
+                    }
+                });
+            } else {
+                redis.set('key:' + name, session.sessionId);
+                res.redirect('/room/' + name)
+            }
         });
     });
 
