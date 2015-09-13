@@ -10,6 +10,8 @@ var redis           = require('redis').createClient(process.env.REDIS_URL ? proc
 redis.on("error", function (err) { console.log("Error " + err) });
 redis.on('connect', function() { console.log('connected') });
 
+// configuration
+app.set('port', (process.env.PORT || 3000));
 
 // middleware
 app.use( bodyparser.json() );
@@ -73,6 +75,6 @@ io.on('connection', function(socket){
 
 
 // start server
-http.listen(3000, function(){
-    console.log('listening on *:3000');
+http.listen(app.get('port'), function(){
+    console.log('listening on', app.get('port'));
 });
