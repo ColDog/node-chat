@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Socket.IO chat</title>
+    <title>Chatroom</title>
     <style>
         body { font: 13px Helvetica, Arial; }
     </style>
@@ -13,8 +13,15 @@
 <body>
     <h1>Chat Application</h1>
     <form action="/new_room" method="post">
-        <input id="name"    autocomplete="on"  placeholder="name" />
-        <button>Create Room</button>
+        <input id="name"    name="name" autocomplete="on"  placeholder="name" />
+        <input id="button"  type="submit" value="Submit" disabled>
     </form>
+
+    <!-- Javascripts -->
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <script src="/javascripts/all.js"></script>
+    <script src="/javascripts/index.js"></script>
 </body>
 </html>

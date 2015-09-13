@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Socket.IO chat</title>
+    <title>Chatroom</title>
     <style>
         body { font: 13px Helvetica, Arial; }
         form { padding: 3px; position: fixed; bottom: 0; width: 50%; }
@@ -16,92 +16,27 @@
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+    <p id="alert"></p>
+    <h2 id="title"></h2>
     <div id="video"></div>
+
     <ul id="messages">
 
     </ul>
+
     <form action="">
-        <input id="name"    autocomplete="on"  placeholder="name" />
-        <textarea id="message" autocomplete="off" placeholder="message" ></textarea>
-        <button>Send</button>
+        <input      id="name"    autocomplete="on"  placeholder="name" />
+        <textarea   id="message" autocomplete="off" placeholder="message" ></textarea>
+        <input      type="submit" value="Message">
     </form>
     <div id="publisher"></div>
+
+    <!-- Javascripts -->
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
-    <script>
-        function param(name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                    results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-        }
-
-        var sessionId   = param('session');
-        var socket      = io();
-        var session     = OT.initSession('45340532', sessionId);
-        var token       = '';
-        var publisher;
-
-        $('form').submit(function(){
-            socket.emit('chat message', {
-                name:    $('#name').val(),
-                message: $('#message').val(),
-                session: sessionId
-            });
-            $('#message').val('');
-            return false;
-        });
-
-        session.on('streamCreated', function(event) {
-            var subscriberProperties = {insertMode: 'append'};
-            var subscriber = session.subscribe(event.stream,
-                    'video',
-                    subscriberProperties,
-                    function (error) {
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            console.log('Subscriber added.');
-                        }
-                    });
-        });
-
-        socket.on('chat message', function(msg){
-            $('#messages').append('<li>' + msg.name + ': ' + msg.message + '</li>');
-        });
-
-        socket.on('sendToken', function(msg){
-            console.log( 'send token', msg );
-            session.connect(msg, function(error) {
-                if (error) {
-                    console.log("Error connecting: ", error.code, error.message);
-                } else {
-                    console.log("Connected to the session.");
-                    if (session.capabilities.publish == 1) {
-                        publisher = OT.initPublisher('publisher', {insertMode: "append", resolution: '50x50'}, function(error) {
-                            if (error) {
-                                $('#publisher').append('Cannot initialize publisher.');
-                            } else {
-                                console.log('Publisher initialized.');
-                            }
-                        });
-                        session.publish(publisher, function(error) {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                console.log('Publishing a stream.');
-                            }
-                        });
-                    }
-                }
-            });
-
-        });
-
-        $(document).ready(function(){
-            socket.emit('joinRoom', sessionId);
-        })
-    </script>
+    <script src="/javascripts/connect_opentok.js"></script>
+    <script src="/javascripts/room.js"></script>
+    <script src="/javascripts/all.js"></script>
 </body>
 </html>
