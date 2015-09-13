@@ -49,9 +49,10 @@ module.exports = function(app, User, io){
             if (err) throw err;
             user.comparePassword(req.body.password, function(err, match) {
                     if (match) {
-                        // do login stuff
+                        res.cookie('userId', user._id);
+                        res.redirect('back')
                     } else {
-                        // redirect stuff
+                        res.redirect('back')
                     }
                 }
             )

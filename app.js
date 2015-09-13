@@ -60,8 +60,14 @@ redis.on( 'connect', function() { console.log('connected') });
 // middleware
 app.use( bodyparser.json() );
 app.use( bodyparser.urlencoded({extended: true}) );
+app.use( cookieParser );
 app.use( express.static(__dirname + '/public') );
 
+
+// custom functions
+function flash(message) {
+
+};
 
 // chat plugin functionality
 require( './chat/chat' )( app, io, redis, opentok, User );

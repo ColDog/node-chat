@@ -38,7 +38,7 @@ module.exports = function(app, io, redis, opentok, User){
         console.log('socket connected');
         socket.on('chat message', function(msg){
             io.to( msg.room ).emit('chat message', msg);
-            redis.rpush(['msg:' + msg.room, msg.name + ':' + msg.message], function(err, reply) {
+            redis.rpush(['msg:' + msg.room, msg.name + ': ' + msg.message], function(err, reply) {
                 console.log('store list', reply);
             });
             console.log( 'Chat:', msg )

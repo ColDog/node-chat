@@ -8,7 +8,7 @@ $('form').submit(function( event ){
     socket.emit('chat message', {
         name:    $('#name').val(),
         message: $('#message').val(),
-        room: room
+        room:    user + ':' + room
     });
     $('#message').val('');
     return false;
