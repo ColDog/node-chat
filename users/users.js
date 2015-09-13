@@ -4,14 +4,14 @@ module.exports = function(app, User){
         User.find({}, function(err, users) {
             if (err) throw err;
             console.log(users);
-            res.render(__dirname + '/views/users', {users: users})
+            res.sendFile(__dirname + '/views/users.html');
         });
     });
     app.get('/users/:username', function(req, res){
         User.find({ username: req.params.username }, function(err, user) {
             if (err) throw err;
             console.log(user);
-            res.render(__dirname + '/views/user', {user: user})
+            res.sendFile(__dirname + '/views/user.html');
         });
     });
     app.post('/users/new', function(req, res){
@@ -27,7 +27,7 @@ module.exports = function(app, User){
         User.findOneAndUpdate({ username: req.params.username }, req.body, function(err, user) {
             if (err) throw err;
             console.log('user updated', user);
-            res.render(__dirname + '/views/users', {user: user})
+            res.sendFile(__dirname + '/views/user.html');
         });
     });
     app.delete('/users/:username', function(req, res){
